@@ -7,6 +7,4 @@ app.get("/api/categories", getCategories);
 
 app.use(handle500);
 
-
-
 module.exports = app;

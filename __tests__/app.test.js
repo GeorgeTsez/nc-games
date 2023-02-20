@@ -11,18 +11,6 @@ beforeEach(() => {
 afterAll(() => {
   return connection.end();
 });
-
-// describe("GET /api/categories", () => {
-//   it.only('responds with json object containing a "message" key', () => {
-//     return request(app)
-//       .get("/api/categories")
-//       .expect(200)
-//       .then((response) => {
-//         expect(response.body.message).toBe("All good here");
-//       });
-//   });
-// });
-//focus here so you can make the logic later , check documentation 
 describe("/api/categories", () => {
   test("200 status code: GET response with an array of categories", () => {
     return request(app)

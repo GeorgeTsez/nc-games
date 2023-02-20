@@ -11,6 +11,7 @@ const fetchCategories = () => {
         return result.rows;
       });
     }
+    
 
 
 
