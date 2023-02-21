@@ -33,21 +33,17 @@ const fetchReviews = () => {
       return result.rows;
     });
 };
-const fetchReviewId = () => {
-  return db.query(
-    `
-    SELECT reviews.review_id,
-    reviews.comment_id,
-    reviews.author,
-    reviews.body,
-    reviews.created_at,
-    reviews.votes FROM reviews
-        `
-  )
-  .then((result) => {
-    console.log(result.rows)
-    return result.rows;
-  });
+const fetchReviewId = (id) => {
+  return db
+    .query(
+      `
+    SELECT * FROM reviews WHERE review_id = $1
+        `,
+      [id]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
 };
 
 module.exports = { fetchCategories, fetchReviews, fetchReviewId };

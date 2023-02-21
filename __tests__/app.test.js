@@ -18,8 +18,7 @@ describe("GET./api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body }) => {
-        expect(body.categories).
-        toBeInstanceOf(Array);
+        expect(body.categories).toBeInstanceOf(Array);
         body.categories.forEach((category) => {
           expect(category).toEqual(
             expect.objectContaining({
@@ -31,57 +30,51 @@ describe("GET./api/categories", () => {
       });
   });
 });
-describe("GET./api/reviews",()=>{
-  test.skip("200 status code: GET response with an array of reviews sorted by date in descending order",()=>{
+describe("GET./api/reviews", () => {
+  test.skip("200 status code: GET response with an array of reviews sorted by date in descending order", () => {
     return request(app)
-    .get("/api/reviews")
-    .expect(200)
-    .then(({ body }) => {
-      expect(body.reviews).toBeInstanceOf(Array);
-      expect(body.reviews.length).toBeGreaterThan(0)
-      body.reviews.forEach((review) => {
-        expect(review).toEqual(
-          expect.objectContaining({
-            review_id:expect.any(Number),
-            title:expect.any(String),
-            designer:expect.any(String),
-            owner:expect.any(String),
-            review_img_url:expect.any(String),
-            category:expect.any(String),
-            created_at:expect.any(String),
-            votes:expect.any(Number),
-            comment_count:expect.any(Number)
-            
-          })
-        );
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeInstanceOf(Array);
+        expect(body.reviews.length).toBeGreaterThan(0);
+        body.reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
       });
-    });
-
-
-  })
-})
-// describe("GET./api/reviews/:review_id",()=>{
-//   test("200 status code: GET response with a review object",()=>{
-//     return request(app)
-//     .get("/api/reviews/:review_id")
-//     .expect(200)
-//     .then(({ body }) => {
-//       expect(body.reviews).toBeInstanceOf(Object);
-//       body.reviews.forEach((review) => {
-//         expect(review).toEqual(
-//           expect.objectContaining({
-//             review_id:expect.any(Number),
-//             comment_id:expect.any(Number),
-//             author:expect.any(String),
-//             body:expect.any(String),
-//             created_at:expect.any(String),
-//             votes:expect.any(Number)
-            
-//           })
-//         );
-//       });
-//     });
-
-
-//   })
-// })
+  });
+});
+describe("GET./api/reviews/:review_id", () => {
+  test("200 status code: GET response with a review object", () => {
+    return request(app)
+      .get("/api/reviews/3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.review).toBeInstanceOf(Object);
+        expect(body.review).toEqual({
+          review_id: 3,
+          title: "Ultimate Werewolf",
+          category: "social deduction",
+          designer: "Akihisa Okui",
+          owner: "bainesface",
+          review_body: "We couldn't find the werewolf!",
+          review_img_url:
+            "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700",
+          created_at: "2021-01-18T10:01:41.251Z",
+          votes: 5,
+        });
+      });
+  });
+});
