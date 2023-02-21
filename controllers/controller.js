@@ -1,14 +1,13 @@
 const express = require("express");
 const categories = require("../db/data/test-data/categories");
 const reviews = require("../db/data/development-data/reviews")
-const { fetchCategories, fetchReviews } = require("../models/models");
+const { fetchCategories, fetchReviews,fetchReviewId } = require("../models/models");
 
-// there are my methods 
+
 const getCategories = (request, response, next) => {
   fetchCategories()
     .then((categories) => {
       response.status(200);
-      //why this in an object?
       response.send({ categories: categories });
     })
     .catch((err) => {
@@ -25,7 +24,17 @@ const getReviews = (request, response, next) =>{
     next(err);
   });
 }
+const getReviewId = (request, response, next) =>{
+  fetchReviewId()
+  .then((reviews)=>{
+    response.status(200);
+    response.send({ reviews: reviews });
+  })
+  .catch((err) => {
+    next(err);
+  });
+}
 
 
 
-module.exports = { getCategories, getReviews};
+module.exports = { getCategories, getReviews, getReviewId};
