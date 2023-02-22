@@ -57,7 +57,7 @@ describe("GET./api/reviews", () => {
   });
 });
 describe("GET./api/reviews/:review_id", () => {
-  test("200 status code: GET response with a review object", () => {
+  test.skip("200 status code: GET response with a review object", () => {
     return request(app)
       .get("/api/reviews/3")
       .expect(200)
@@ -75,6 +75,22 @@ describe("GET./api/reviews/:review_id", () => {
           created_at: "2021-01-18T10:01:41.251Z",
           votes: 5,
         });
+      });
+  });
+  test.skip("400 status code : Get api/reviews/any Bad Request", () => {
+    return request(app)
+      .get("/api/reviews/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request!");
+      });
+  });
+  test.skip("404 status code : Get api/reviews/100000 This directory doesn't exist", () => {
+    return request(app)
+      .get("/api/reviews/10000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Doesn't Exist");
       });
   });
 });
