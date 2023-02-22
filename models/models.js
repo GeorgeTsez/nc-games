@@ -49,5 +49,20 @@ const fetchReviewId = (id) => {
       return result.rows[0];
     });
 };
+const fetchComment = (id) => {
+  return db
+  .query(
+    `
+    SELECT * FROM comments WHERE  review_id=$1 ;
+    `,[id]
+  )
+  .then((result)=>{
+    return result.rows
+  })
+}
 
-module.exports = { fetchCategories, fetchReviews, fetchReviewId };
+
+
+
+
+module.exports = { fetchCategories, fetchReviews, fetchReviewId,fetchComment };
