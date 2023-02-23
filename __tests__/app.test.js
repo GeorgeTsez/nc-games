@@ -128,7 +128,7 @@ test("200 if the id has no comments and i receive an empty array ", () => {
     });
 });
 describe("400 - 404 handle", () => {
-  test.only("400 - if we request the comments for a bad path /api/reviews/bannana/comments", () => {
+  test("400 - if we request the comments for a bad path /api/reviews/bannana/comments", () => {
     return request(app)
       .get("/api/reviews/banana/comments")
       .expect(400)
@@ -136,7 +136,7 @@ describe("400 - 404 handle", () => {
         expect(body.msg).toBe("Bad Request!");
       });
   });
-  test.only("404- if we request the comments for a valid id not in the database /api/reviews/1000/comments", () => {
+  test("404- if we request the comments for a valid id not in the database /api/reviews/1000/comments", () => {
     return request(app)
       .get("/api/reviews/10000")
       .expect(404)
@@ -145,3 +145,53 @@ describe("400 - 404 handle", () => {
       });
     })
 });
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("201 status code: Created something", () => {
+    const input = {username:'mallionaire', body: "hello"}
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(input)
+      .expect(201)
+      .then(({ body }) => {
+
+        expect(body.addedComments).toBeInstanceOf(Object);
+        expect(body.addedComments).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            author:'mallionaire',
+            body: "hello",
+            votes: 0,
+            review_id: 1,
+            created_at: expect.any(String)
+          })
+        );
+      });
+  });
+})
+  test("Error-handling-400 ,/api/reviews/banana/comments , invalid id",()=>{
+    return request(app)
+    .post("/api/reviews/banana/comments")
+    .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request!");
+      });
+  })
+  test("Error-Handling-404- if we create the comments for an id that doesn't exist /api/reviews/1000/comments", () => {
+    return request(app)
+      .post("/api/reviews/10000/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Doesn't Exist");
+      });
+    })
+    test("Error-Handling-400-if username doesn't exist-Foreign key violation ", () => {
+      const input = {username:'banana', body: "hello"}
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(input)
+        .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("Foreign key violation");
+      });
+    })
+    
