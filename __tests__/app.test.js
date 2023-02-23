@@ -4,6 +4,7 @@ const connection = require("../db/connection.js");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const { string } = require("pg-format");
+const { createTestScheduler } = require("jest");
 
 beforeEach(() => {
   return seed(data);
@@ -13,7 +14,7 @@ afterAll(() => {
   return connection.end();
 });
 describe("GET./api/categories", () => {
-  test.skip("200 status code: GET response with an array of categories", () => {
+  test("200 status code: GET response with an array of categories", () => {
     return request(app)
       .get("/api/categories")
       .expect(200)
@@ -31,7 +32,7 @@ describe("GET./api/categories", () => {
   });
 });
 describe("GET./api/reviews", () => {
-  test.skip("200 status code: GET response with an array of reviews sorted by date in descending order", () => {
+  test("200 status code: GET response with an array of reviews sorted by date in descending order", () => {
     return request(app)
       .get("/api/reviews")
       .expect(200)
@@ -77,4 +78,70 @@ describe("GET./api/reviews/:review_id", () => {
         });
       });
   });
+  test("400 status code : Get api/reviews/any Bad Request", () => {
+    return request(app)
+      .get("/api/reviews/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request!");
+      });
+  });
+  test("404 status code : Get api/reviews/100000 This directory doesn't exist", () => {
+    return request(app)
+      .get("/api/reviews/10000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Doesn't Exist");
+      });
+  });
+});
+describe("GET /api/reviews/:review_id/comments", () => {
+  test("200 status code GET GET /api/reviews/:review_id/comments, an array of comments of which each comment should have the following properties:", () => {
+    return request(app)
+      .get("/api/reviews/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toBeInstanceOf(Array);
+        expect(body.comments.length).toBeGreaterThan(0);
+        body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+});
+test("200 if the id has no comments and i receive an empty array ", () => {
+  return request(app)
+    .get("/api/reviews/14/comments")
+    .expect(200)
+    .then(({ body }) => {
+      expect(body.comments).toBeInstanceOf(Array);
+      expect(body.comments).toHaveLength(0);
+    });
+});
+describe("400 - 404 handle", () => {
+  test.only("400 - if we request the comments for a bad path /api/reviews/bannana/comments", () => {
+    return request(app)
+      .get("/api/reviews/banana/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request!");
+      });
+  });
+  test.only("404- if we request the comments for a valid id not in the database /api/reviews/1000/comments", () => {
+    return request(app)
+      .get("/api/reviews/10000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Doesn't Exist");
+      });
+    })
 });
