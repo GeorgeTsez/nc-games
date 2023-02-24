@@ -5,7 +5,8 @@ const {
   getReviewId,
   getComments,
   CreateComment,
-  patchReview
+  patchReview,
+  getUsers
 } = require("./controllers/controller");
 const { handle500, handlePsql, handleHTTP } = require("./controllers/controllers.error");
 const app = express();
@@ -20,6 +21,7 @@ app.post("/api/reviews/:review_id/comments",CreateComment)
 
 app.patch("/api/reviews/:review_id",patchReview)
 
+app.get("/api/users",getUsers)
 
 app.use(handlePsql);
 app.use(handleHTTP)

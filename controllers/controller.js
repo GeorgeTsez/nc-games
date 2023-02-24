@@ -8,6 +8,7 @@ const {
   fetchComment,
   addComment,
   patchUpdate,
+  fetchUsers,
 } = require("../models/models");
 
 const getCategories = (request, response, next) => {
@@ -79,6 +80,17 @@ const patchReview = (request, response, next) => {
     });
 };
 
+const getUsers = (request, response, next) => {
+  fetchUsers()
+  .then((users) => {
+      response.status(200);
+      response.send({ users:users });
+    })
+    .catch((err) => {
+      next(err);
+    });
+  }
+
 module.exports = {
   getCategories,
   getReviews,
@@ -86,4 +98,5 @@ module.exports = {
   getComments,
   CreateComment,
   patchReview,
+  getUsers
 };
