@@ -6,7 +6,7 @@ const handlePsql = (err, request, response, next) => {
     console.log(err)
   } else if ((err.code === '23503')) {
     response.status(400).send({msg: "Foreign key violation"})
-  }
+  } 
   else {
     next(err);
   }

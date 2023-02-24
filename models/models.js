@@ -79,8 +79,25 @@ const addComment = (id, comment) => {
     });
 }
 
+const patchUpdate = (review_id, inc_votes) => {
+ return db
+ .query(
+  `
+  UPDATE reviews SET votes = votes + $1 
+  WHERE review_id = $2
+  RETURNING *; 
+  `,[inc_votes.inc_votes, review_id.review_id]
+ )
+ 
+ .then((updatedReview)=>{
+  if (updatedReview.rows.length === 0) {
+    return Promise.reject({ status: 404, msg: "Doesn't Exist" });
+  }
+  return updatedReview.rows[0]
+ })
+}
 
 
 
 
-module.exports = { fetchCategories, fetchReviews, fetchReviewId,fetchComment, addComment };
+module.exports = { fetchCategories, fetchReviews, fetchReviewId,fetchComment, addComment, patchUpdate };

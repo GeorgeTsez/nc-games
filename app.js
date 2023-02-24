@@ -5,6 +5,7 @@ const {
   getReviewId,
   getComments,
   CreateComment,
+  patchReview
 } = require("./controllers/controller");
 const { handle500, handlePsql, handleHTTP } = require("./controllers/controllers.error");
 const app = express();
@@ -17,11 +18,13 @@ app.get("/api/reviews/:review_id/comments",getComments)
 
 app.post("/api/reviews/:review_id/comments",CreateComment)
 
+app.patch("/api/reviews/:review_id",patchReview)
+
 
 app.use(handlePsql);
 app.use(handleHTTP)
 
 
-//default handler always last!
+
 app.use(handle500);
 module.exports = app;

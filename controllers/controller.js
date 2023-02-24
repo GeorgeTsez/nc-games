@@ -7,6 +7,7 @@ const {
   fetchReviewId,
   fetchComment,
   addComment,
+  patchUpdate,
 } = require("../models/models");
 
 const getCategories = (request, response, next) => {
@@ -41,11 +42,11 @@ const getReviewId = (request, response, next) => {
     });
 };
 const getComments = (request, response, next) => {
-  const id = request.params.review_id
+  const id = request.params.review_id;
   fetchComment(id)
     .then((comments) => {
       response.status(200);
-      response.send({ comments:comments });
+      response.send({ comments: comments });
     })
     .catch((err) => {
       next(err);
@@ -53,17 +54,36 @@ const getComments = (request, response, next) => {
 };
 
 const CreateComment = (request, response, next) => {
-  const id = request.params.review_id
-  const comment = request.body
+  const id = request.params.review_id;
+  const comment = request.body;
   addComment(id, comment)
-  .then((addedComment) => {
-    response.status(201);
-    response.send({ addedComments: addedComment });
-  })
-  .catch((err) => {
-    next(err);
-  });
+    .then((addedComment) => {
+      response.status(201);
+      response.send({ addedComments: addedComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
-}
+const patchReview = (request, response, next) => {
+  const review_id = request.params;
+  const votes = request.body
+  patchUpdate(review_id, votes)
+    .then((review) => {
+      response.status(200);
+      response.send({ review: review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
-module.exports = { getCategories, getReviews, getReviewId, getComments, CreateComment };
+module.exports = {
+  getCategories,
+  getReviews,
+  getReviewId,
+  getComments,
+  CreateComment,
+  patchReview,
+};
