@@ -25,4 +25,4 @@ const handle500 = (err, request, response, next) => {
   response.status(500).send("Server Error!");
 };
 
-module.exports = { handle500, handlePsql, handleHTTP };
+module.exports = { handle500, handlePsql, handleHTTP};

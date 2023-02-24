@@ -96,8 +96,18 @@ const patchUpdate = (review_id, inc_votes) => {
   return updatedReview.rows[0]
  })
 }
+const fetchUsers = () => {
+  return db
+  .query(
+    `
+    SELECT * FROM users;
+    `
+  )
+  .then((result)=>{
+    return result.rows
+  })
+}
 
 
 
-
-module.exports = { fetchCategories, fetchReviews, fetchReviewId,fetchComment, addComment, patchUpdate };
+module.exports = { fetchCategories, fetchReviews, fetchReviewId,fetchComment, addComment, patchUpdate, fetchUsers };
