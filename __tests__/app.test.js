@@ -194,4 +194,79 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(body.msg).toEqual("Foreign key violation");
       });
     })
-    
+    describe("PATCH /api/reviews/:review_id - ",()=>{
+      test("PATCH /api/reviews/:review_id if we increase the reviews votes by the right amount",()=>{
+        const input = {inc_votes: 5 }
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(input)
+        .expect(200)
+        .then(({body})=>{
+          expect(body.review).toEqual(
+            {
+              review_id: 1,
+              title: 'Agricola',
+              designer: 'Uwe Rosenberg',
+              owner: 'mallionaire',
+              review_img_url:
+                'https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700',
+              review_body: 'Farmyard fun!',
+              category: 'euro game',
+              created_at: expect.any(String),
+              votes: 6
+            }
+          )
+        })
+      })
+    })
+      test("PATCH /api/reviews/:review_id if we decrease the reviews votes by any",()=>{
+        const input = {inc_votes: -10 }
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(input)
+        .expect(200)
+        .then(({body})=>{
+          expect(body.review).toEqual(
+            {
+              review_id: 1,
+              title: 'Agricola',
+              designer: 'Uwe Rosenberg',
+              owner: 'mallionaire',
+              review_img_url:
+                'https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700',
+              review_body: 'Farmyard fun!',
+              category: 'euro game',
+              created_at: expect.any(String),
+              votes: -9
+            }
+          )
+        })
+      })
+      test("Error-handling-400 ,/api/reviews/:review_id , invalid id",()=>{
+        return request(app)
+        .patch("/api/reviews/banana")
+        .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request!");
+          });
+      })
+      test("Error-Handling-404- if we update votes for an id that doesn't exist /api/reviews/:review_id", () => {
+        const input = {inc_votes: 5 }
+        return request(app)
+          .patch("/api/reviews/10000")
+          .send(input)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Doesn't Exist");
+          });
+        })
+        test("Error-Handling-400-if input is incorrect ", () => {
+          const input = {inc_votes: "banana" }
+          return request(app)
+            .patch("/api/reviews/:review_id")
+            .send(input)
+            .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toEqual("Bad Request!");
+          });
+    })
