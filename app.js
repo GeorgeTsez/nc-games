@@ -10,7 +10,10 @@ const {
 } = require("./controllers/controller");
 const { handle500, handlePsql, handleHTTP } = require("./controllers/controllers.error");
 const app = express();
+const cors = require('cors');
+
 app.use(express.json());
+app.use(cors());
 
 app.get("/api/categories", getCategories);
 app.get("/api/reviews", getReviews);
